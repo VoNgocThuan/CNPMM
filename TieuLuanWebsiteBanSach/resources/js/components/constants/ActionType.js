@@ -1,0 +1,4 @@
+export const CHANGE_CART = 'CHANGE_CART'
+export const ADD_PRODUCT = 'ADD_PRODUCT'
+export const SEARCH_PRODUCT = 'SEARCH_PRODUCT'
+export const SEARCH_BOOK = 'SEARCH_BOOK'
