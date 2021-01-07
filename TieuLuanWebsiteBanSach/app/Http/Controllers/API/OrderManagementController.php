@@ -9,6 +9,9 @@ use App\Models\OrderDetails;
 use App\Models\Customer;
 use App\Models\Book;
 use App\Models\Coupon;
+use App\Models\City;
+use App\Models\Province;
+use App\Models\Wards;
 use App\repositories\OrderRepository;
 use Illuminate\Support\Facades\DB;
 
@@ -23,7 +26,7 @@ class OrderManagementController extends Controller
 			$order_status = $ord->order_status;
 		}
 		$customer = Customer::where('id',$customer_id)->first();
-        
+
         return response()->json([
             'success' => true,
             'message' => 'Order View',
@@ -31,6 +34,27 @@ class OrderManagementController extends Controller
             'customer' => $customer,
 			'order_details' => $order_details,
         ]);
+	}
+	public function view_address_from_order($order_code){
+		$order = Order::where('order_code',$order_code)->first();
+
+		$order_city = $order->city;
+		$order_province = $order->province;
+		$order_wards = $order->wards;
+
+		$shipping_city = City::where('matp', $order_city)->first();
+		$shipping_province = Province::where('maqh', $order_province)->first();
+		$shipping_wards = Wards::where('xaid', $order_wards)->first();
+
+		return response()->json([
+            'success' => true,
+			'message' => 'Shipping Address View',
+			'order' => $order,
+			'shipping_city' => $shipping_city->name_city,
+			'shipping_province' => $shipping_province->name_quanhuyen,
+			'shipping_wards' => $shipping_wards->name_xaphuong
+        ]);
+		//$city = City::where('')
 	}
 	public function view_coupon_order($coupon_code){
 		$coupon_detail = Coupon::where('coupon_code', $coupon_code)->get();

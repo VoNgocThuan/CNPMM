@@ -108,9 +108,6 @@ class Login extends React.Component {
                         {this.state.errors.email[0]}
                       </p>
                     )}
-                    <Form.Control.Feedback type="invalid">
-                      Email chưa hợp lệ
-                    </Form.Control.Feedback>
                   </Form.Group>
 
                   <Form.Group controlId="password">
@@ -129,9 +126,6 @@ class Login extends React.Component {
                         {this.state.errors.password[0]}
                       </p>
                     )}
-                    <Form.Control.Feedback type="invalid">
-                      Hãy nhập mật khẩu
-                    </Form.Control.Feedback>
                   </Form.Group>
 
                   <div className="row mt-4 mb-2">

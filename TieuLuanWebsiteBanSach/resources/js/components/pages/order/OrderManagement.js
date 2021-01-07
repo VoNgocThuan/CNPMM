@@ -4,11 +4,14 @@ import { Link } from 'react-router-dom';
 import Pagination from "react-js-pagination";
 import { PUBLIC_URL } from '../../../constants';
 import { updateOrderStatus } from '../../../services/OrderService';
-export default class OrderManagement extends Component {
+import { InputGroup, FormControl } from 'react-bootstrap';
+class OrderManagement extends Component {
     constructor() {
         super()
         this.state = {
             orders: [],
+            searchOrderList: [],
+            searchText: "",
             activePage: 1,
             itemsCountPerPage: 1,
             totalItemsCount: 1,
@@ -18,16 +21,43 @@ export default class OrderManagement extends Component {
         this.handlePageChange = this.handlePageChange.bind(this);
     }
     componentDidMount() {
+        this.getOrderLists();
+    }
+    getOrderLists = async () => {
         Axios.get('/api/manage-order')
             .then(response => {
                 this.setState({
                     orders: response.data.data,
+                    searchOrderList: response.data.data,
                     //Trong Postman
                     itemsCountPerPage: response.data.per_page,
                     totalItemsCount: response.data.total,
                     activePage: response.data.current_page
                 });
             });
+    };
+    onSearchOrderList = (e) => {
+        const searchText = e.target.value;
+        this.setState({
+            isloading: true,
+        });
+        if (searchText.length > 0) {
+            const searchData = this.state.orders.filter(function (item) {
+                const itemData = item.phone + " " + item.email + " " + item.order_code;
+                const textData = searchText.trim().toLowerCase();
+                return itemData.trim().toLowerCase().indexOf(textData) !== -1;
+            })
+            this.setState({
+                searchOrderList: searchData,
+                searchText: searchText,
+                isloading: false,
+            });
+        } else {
+            this.setState({
+                searchText,
+            });
+            this.getOrderLists();
+        }
     }
     handlePageChange(pageNumber) {
         console.log(`active page is ${pageNumber}`);
@@ -91,9 +121,19 @@ export default class OrderManagement extends Component {
         return (
             <div>
                 <hr />
-                <div className="header-part">
+                <div className="header-part row">
                     <div className="float-left">
                         <h2>Danh sách đơn hàng</h2>
+                    </div>
+                    <div className="float-left text-center ml-5">
+                        <InputGroup className="mb-3">
+                            <FormControl
+                                placeholder="Gõ để tìm kiếm..."
+                                aria-label="Gõ để tìm kiếm..."
+                                aria-describedby="basic-addon2"
+                                onChange={(e) => this.onSearchOrderList(e)}
+                            />
+                        </InputGroup>
                     </div>
                 </div>
                 <table className="table table-hover">
@@ -159,6 +199,7 @@ export default class OrderManagement extends Component {
                                                 <>
                                                     <button
                                                         className="btn btn-outline-warning mr-2"
+                                                        disabled
                                                         onClick={() => this.toggleCompleteStatus(order)}
                                                     >
                                                         Chờ xác nhận
@@ -169,6 +210,7 @@ export default class OrderManagement extends Component {
                                                 <>
                                                     <button
                                                         className="btn btn-outline-info mr-2"
+                                                        disabled
                                                         onClick={() => this.toggleCompleteStatus(order)}
                                                     >
                                                         Chờ lấy hàng
@@ -179,6 +221,7 @@ export default class OrderManagement extends Component {
                                                 <>
                                                     <button
                                                         className="btn btn-outline-secondary mr-2"
+                                                        disabled
                                                         onClick={() => this.toggleCompleteStatus(order)}
                                                     >
                                                         Đang giao
@@ -189,6 +232,7 @@ export default class OrderManagement extends Component {
                                                 <>
                                                     <button
                                                         className="btn btn-outline-success mr-2"
+                                                        disabled
                                                         onClick={() => this.toggleCompleteStatus(order)}
                                                     >
                                                         Đã giao
@@ -199,6 +243,7 @@ export default class OrderManagement extends Component {
                                                 <>
                                                     <button
                                                         className="btn btn-outline-danger mr-2"
+                                                        disabled
                                                         onClick={() => this.toggleCompleteStatus(order)}
                                                     >
                                                         Đã hủy
@@ -209,6 +254,7 @@ export default class OrderManagement extends Component {
                                                 <>
                                                     <button
                                                         className="btn btn-outline-dark mr-2"
+                                                        disabled
                                                         onClick={() => this.toggleCompleteStatus(order)}
                                                     >
                                                         Trả hàng
@@ -241,5 +287,5 @@ export default class OrderManagement extends Component {
 
 }
 
-
+export default OrderManagement;
 

@@ -93,7 +93,9 @@ class Products extends Component {
                 img={product.image1}
                 name={product.name}
                 author={product.author}
+                originalPrice={product.originalPrice}
                 price={product.price}
+                quantity={product.quantity}
                 temp={value => {
                     this.buyItem(value);
                 }}

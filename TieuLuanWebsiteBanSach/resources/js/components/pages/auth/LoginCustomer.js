@@ -53,8 +53,7 @@ class LoginCheckout extends React.Component {
           errorMessage: "",
         });
         localStorage.setItem("loginCustomerData", JSON.stringify(response));
-        // history.replace(`${PUBLIC_URL}projects`);
-        window.location.href = "http://127.0.0.1:8000/shopbansach/checkout";
+        window.location.href = "http://127.0.0.1:8000/shopbansach";
       } else {
         console.log("response.errors", response.errors);
         this.setState({
@@ -118,9 +117,6 @@ class LoginCheckout extends React.Component {
                               {this.state.errors.email[0]}
                             </p>
                           )}
-                          <Form.Control.Feedback type="invalid">
-                            Vui lòng nhập lại địa chỉ email hợp lệ!
-                          </Form.Control.Feedback>
                         </Form.Group>
 
                         <Form.Group controlId="password">
@@ -139,9 +135,6 @@ class LoginCheckout extends React.Component {
                               {this.state.errors.password[0]}
                             </p>
                           )}
-                          <Form.Control.Feedback type="invalid">
-                            Nhập mật khẩu
-                          </Form.Control.Feedback>
                         </Form.Group>
 
                         {this.state.isLoading && (

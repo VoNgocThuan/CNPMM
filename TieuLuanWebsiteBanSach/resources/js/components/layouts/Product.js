@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { PUBLIC_URL } from "../../constants";
 import { connect } from 'react-redux'
 import * as actions from './../actions/index'
-import { Row } from 'react-bootstrap';
 
 class Product extends Component {
     constructor(props) {
@@ -28,24 +27,31 @@ class Product extends Component {
     }
     handleSubmit(e) {
         e.preventDefault();
-        Axios.post('http://127.0.0.1:8000/add', {
-            qty: this.state.qty,
-            id: this.state.id
-        })
-            .then(res => {
-                console.log(res.data);
-                this.setState({
-                    cartlist: res.data,
+        console.log("qty", this.state.qty)
+        if (this.props.quantity >= this.state.qty) {
+            Axios.post('http://127.0.0.1:8000/add', {
+                qty: this.state.qty,
+                id: this.state.id
+            })
+                .then(res => {
+                    this.setState({
+                        cartlist: res.data,
+                    });
+                    this.getTotalQuantity();
+                    this.getCartDetails();
+                    this.getTotalCart();
+                    this.props.temp(this.state.cartlist);
                 });
-                this.getTotalQuantity();
-                this.getCartDetails();
-                this.getTotalCart();
-                this.props.temp(this.state.cartlist);
-                localStorage.setItem("CartData", JSON.stringify(res));
-            });
-        this.props.onAddProduct(this.state.totalQuantity, this.state.cartlist, this.state.totalCart);
+            this.props.onAddProduct(this.state.totalQuantity, this.state.cartlist, this.state.totalCart);
+        }
+        else {
+            alert("Số lượng tối đa được phép mua: " + 
+            this.props.quantity + 
+            ", quý khách vui lòng liên hệ email: vongocthuan1808@gmail.com hoặc hotline 0843339738 để được tư vấn và hỗ trợ tốt nhất.");
+        }
     };
     qty(id, e) {
+        console.log("id", id)
         this.setState({ qty: e.target.value, id: id });
     }
     getTotalCart = () => {
@@ -73,12 +79,12 @@ class Product extends Component {
             });
         });
     };
-    handlePlusMinus(type){
+    handlePlusMinus(type) {
         this.setState(prevState => {
-           return {qty: type == 'add' ? prevState.qty + 1: prevState.qty - 1}
+            return { qty: type == 'add' ? prevState.qty + 1 : prevState.qty - 1 }
         });
     }
-  
+
     render() {
         return (
             <div className="col-12 col-sm-6 col-md-6 col-lg-3">
@@ -103,40 +109,74 @@ class Product extends Component {
                         <div className="boxContentProduct" key={this.props.bookId}>
                             <div className="nameProduct">{this.props.name}</div>
                             <p className="nameAuthor">Tác giả: {this.props.author}</p>
-                            <div className="boxStar"><i className="fas fa-star"></i><i className="fas fa-star"></i><i className="fas fa-star"></i><i className="fas fa-star"></i><i className="fas fa-star"></i> <span className="priceProduct">{this.props.price}đ</span></div>
-
-                            <div className="boxQty input-group">
-                                Số lượng:
-                                <button
-                                    className="minus-item btn btn-primary input-group-addon ml-3"
-                                    onClick={this.handlePlusMinus.bind(this, 'sub')}
-                                    value='Dec'
-                                >
-                                    -
-                                </button>
-                                <input 
-                                    type="number"
-                                    className="item-count form-control text-center"
-                                    value={this.state.qty}
-                                    onChange={(e) => this.qty(this.props.bookId, e)} />
-                                <button
-                                    className="plus-item btn btn-primary input-group-addon"
-                                    onClick={this.handlePlusMinus.bind(this, 'add')}
-                                    value='Inc'
-                                >
-                                    +
-                                </button>
+                            <div className="detail">
+                                <h4 className="price">
+                                    <span>{this.props.originalPrice}đ</span> - {this.props.price}đ
+                                </h4>
                             </div>
 
+                            {this.props.quantity === 0 && (
+                                <>
+                                    <div className="detail mt-3">
+                                        <h4 className="price text-center">
+                                            HẾT HÀNG
+                                        </h4>
+                                    </div>
+                                </>
+                            )}
+
+                            {this.props.quantity > 0 && (
+                                <>
+                                    <div className="boxQty input-group">
+                                        Số lượng:
+                                        <button
+                                            className="minus-item btn btn-primary input-group-addon ml-3"
+                                            onClick={this.handlePlusMinus.bind(this, 'sub')}
+                                            value='Dec'
+                                        >
+                                            -
+                                        </button>
+                                        <input
+                                            type="number"
+                                            className="item-count form-control text-center"
+                                            value={this.state.qty}
+                                            onChange={(e) => this.qty(this.props.bookId, e)} />
+                                        <button
+                                            className="plus-item btn btn-primary input-group-addon"
+                                            onClick={this.handlePlusMinus.bind(this, 'add')}
+                                            value='Inc'
+                                        >
+                                            +
+                                        </button>
+                                    </div>
+                                </>
+                            )}
+
                             <div className="boxBtnProduct">
-                                <button 
-                                    type="submit" 
-                                    className="btnAddProduct"
-                                    value={this.state.qty}
-                                    onClick={(e) => this.qty(this.props.bookId, e)}
-                                >
-                                    MUA
-                                </button>
+                                {this.props.quantity > 0 && (
+                                    <>
+                                        <button
+                                            type="submit"
+                                            className="btnAddProduct"
+                                            value={this.state.qty}
+                                            onClick={(e) => this.qty(this.props.bookId, e)}
+                                        >
+                                            MUA
+                                        </button>
+                                    </>
+                                )}
+
+                                {this.props.quantity === 0 && (
+                                    <>
+                                        <button
+                                            className="btnAddProduct"
+                                            disabled
+                                        >
+                                            MUA
+                                        </button>
+                                    </>
+                                )}
+
                                 <Link to={`${PUBLIC_URL}books/view/${this.props.bookId}`}>
                                     <button type="submit" className="btnAddProduct">CHI TIẾT</button>
                                 </Link>

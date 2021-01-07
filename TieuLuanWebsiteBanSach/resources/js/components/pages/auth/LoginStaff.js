@@ -111,9 +111,6 @@ class Login extends React.Component {
                         {this.state.errors.email[0]}
                       </p>
                     )}
-                    <Form.Control.Feedback type="invalid">
-                      Nhập địa chỉ Email
-                    </Form.Control.Feedback>
                   </Form.Group>
 
                   <Form.Group controlId="password">
@@ -132,9 +129,6 @@ class Login extends React.Component {
                         {this.state.errors.password[0]}
                       </p>
                     )}
-                    <Form.Control.Feedback type="invalid">
-                      Nhập mật khẩu
-                    </Form.Control.Feedback>
                   </Form.Group>
 
                   {this.state.isLoading && (

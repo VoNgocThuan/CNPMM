@@ -153,7 +153,7 @@ class CustomerAPIController extends Controller
         } else {
             return response()->json([
                 'success' => false,
-                'message' => 'Sorry Invalid Email and Password',
+                'message' => 'Xin lỗi Email hoặc Mật khẩu không đúng',
                 'errors' => null,
             ]);
         }

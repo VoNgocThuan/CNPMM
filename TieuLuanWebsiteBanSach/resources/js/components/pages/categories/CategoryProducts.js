@@ -62,7 +62,7 @@ class CategoryProducts extends Component {
         })
         console.log(categoryName)
         var listProducts = this.state.booklist.map((product, index) => {
-            return <Product key={index} bookId={product.bookId} img={product.image1} name={product.name} author={product.author} price={product.price} temp={(value)=>{this.buyItem(value)}}></Product>
+            return <Product key={index} bookId={product.bookId} img={product.image1} name={product.name} author={product.author} originalPrice={product.originalPrice} price={product.price} temp={(value)=>{this.buyItem(value)}}></Product>
         })
         return (
             <div>

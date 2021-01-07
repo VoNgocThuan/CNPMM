@@ -38,6 +38,7 @@ Route::delete('order/delete/{order_code}', 'API\OrdersController@destroy');
 
 //OrderManagement
 Route::get('/manage-order','API\OrderManagementController@manage_order');
+Route::get('/view-address-from-order/{order_code}','API\OrderManagementController@view_address_from_order');
 Route::get('/get-ordercode-cus-order/{cus_id}','API\OrderManagementController@get_ordercode_cus');
 Route::get('/customer-order/{cus_id}','API\OrderManagementController@list_order_cus');
 Route::get('/view-order/{order_code}','API\OrderManagementController@view_order');

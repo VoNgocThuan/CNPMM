@@ -10,7 +10,6 @@ var initialState = {
 var myReducer = (state = initialState, action) =>{
     switch (action.type) {
         case types.ADD_PRODUCT:
-            console.log("action: ",action);
             return {
                 ...state,
                 cartlist: action.cartlist,

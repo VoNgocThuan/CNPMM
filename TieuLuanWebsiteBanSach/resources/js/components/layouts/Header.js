@@ -87,6 +87,7 @@ class Header extends Component {
         super(props);
         this.state = {
             cartlist: [],
+            book: {},
             idBookCart: "",
             totalCart: 0,
             totalQuantity: 0,
@@ -140,8 +141,8 @@ class Header extends Component {
                 cartlist: res.data
             });
             this.cartlist = res.data;
-            console.log(res.data);
         });
+        console.log("cartlist", this.state.cartlist)
     };
     getTotalCart = async () => {
         await Axios.get("http://127.0.0.1:8000/totalCart").then(res => {
@@ -149,7 +150,6 @@ class Header extends Component {
                 totalCart: res.data
             });
             this.totalCart = res.data;
-            console.log(res.data);
         });
     };
     getTotalQuantity = async () => {
@@ -158,25 +158,34 @@ class Header extends Component {
                 totalQuantity: res.data
             });
             this.totalQuantity = res.data;
-            console.log(res.data);
         });
     };
     tangSoLuongSach = async id => {
-        await Axios.put(`http://127.0.0.1:8000/tang-so-luong/${id}`).then(
-            res => {
-                console.log("Tăng:", this.state.totalQuantity);
-            }
-        );
-        await this.getTotalQuantity();
-        await this.getCartDetails();
-        await this.getTotalCart();
-        console.log(this.cartlist);
-        this.props.onAddNewProduct(
-            this.totalQuantity,
-            this.cartlist,
-            this.totalCart
-        );
-        this.props.onSearch('aaa');
+        await Axios.get(`http://127.0.0.1:8000/api/books/${id}`
+        ).then((res) => {
+            this.setState({
+                book: res.data.data,
+            });
+        });
+        if(this.state.book.quantity > this.state.cartlist[id].quantity)
+        {
+            await Axios.put(`http://127.0.0.1:8000/tang-so-luong/${id}`).then(
+                res => {
+                }
+            );
+            await this.getTotalQuantity();
+            await this.getCartDetails();
+            await this.getTotalCart();
+            this.props.onAddNewProduct(
+                this.totalQuantity,
+                this.cartlist,
+                this.totalCart
+            );
+            this.props.onSearch('aaa');
+        }
+        else{
+            alert("Số lượng tối đa được phép mua: " + this.state.book.quantity);
+        }
     };
     giamSoLuongSach = async id => {
         Axios.put(`http://127.0.0.1:8000/giam-so-luong/${id}`).then(res => {
@@ -184,7 +193,6 @@ class Header extends Component {
         await this.getTotalQuantity();
         await this.getCartDetails();
         await this.getTotalCart();
-        console.log(this.cartlist);
         this.props.onAddNewProduct(
             this.totalQuantity,
             this.cartlist,
@@ -197,7 +205,6 @@ class Header extends Component {
         await this.getTotalQuantity();
         await this.getCartDetails();
         await this.getTotalCart();
-        console.log(this.cartlist);
         this.props.onAddNewProduct(
             this.totalQuantity,
             this.cartlist,
@@ -210,7 +217,6 @@ class Header extends Component {
         await this.getTotalQuantity();
         await this.getCartDetails();
         await this.getTotalCart();
-        console.log(this.cartlist);
         this.props.onAddNewProduct(
             this.totalQuantity,
             this.cartlist,
@@ -452,7 +458,7 @@ class Header extends Component {
                                                                     this.state
                                                                         .cartlist[
                                                                         item
-                                                                    ].quantity
+                                                                    ].quantity                                                                 
                                                                 }
                                                             />
                                                             <button

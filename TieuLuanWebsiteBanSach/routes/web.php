@@ -35,7 +35,7 @@ Route::get('/shopbansach/categories', function(){
 Route::get('/shopbansach/categories/create', function(){
     return view('layouts.app');
 });
-Route::get('/shopbansach/categoryproducts', function(){
+Route::get('/shopbansach/categoryproducts/{id}', function(){
     return view('layouts.app');
 });
 Route::get('/shopbansach/categories/view/{id}', function(){

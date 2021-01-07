@@ -15,6 +15,9 @@ export default class OrderView extends Component {
             order_status: '',
             order_details: [],
             alert_message: '',
+            shipping_city: '',
+            shipping_province: '',
+            shipping_wards: '',
         }
     }
     componentDidMount() {
@@ -27,6 +30,7 @@ export default class OrderView extends Component {
                     order_status: response.data.order[0].status
                 });
             });
+        this.getShippingAddress();
         $('.order_details').on("change", function () {
             var order_status = $(this).val();
             var order_id = $(this).children(":selected").attr("id");
@@ -59,6 +63,16 @@ export default class OrderView extends Component {
             [e.target.name]: e.target.value,
         });
     };
+    getShippingAddress = () => {
+        Axios.get(`/api/view-address-from-order/${this.props.match.params.order_code}`)
+            .then(response => {
+                this.setState({
+                    shipping_city: response.data.shipping_city,
+                    shipping_province: response.data.shipping_province,
+                    shipping_wards: response.data.shipping_wards,
+                });
+            });
+    };
 
     render() {
         return (
@@ -72,8 +86,9 @@ export default class OrderView extends Component {
                             <th scope="col">Tỉnh/Thành phố</th>
                             <th scope="col">Quận/Huyện</th>
                             <th scope="col">Xã/Phường</th>
+                            <th scope="col">Địa chỉ nhà</th>
                             <th scope="col">Lời nhắn</th>
-                            <th scope="col">Hình thức thanh toán</th>
+                            <th scope="col">Phương thức thanh toán</th>
                             <th scope="col">Mã giảm giá</th>
                             <th scope="col">Phí vận chuyển</th>
                         </tr>
@@ -91,23 +106,24 @@ export default class OrderView extends Component {
                                     </td>
                                     <td>
                                         {
-                                            this.state.order[
-                                                item
-                                            ].city
+                                            this.state.shipping_city
+                                        }
+                                    </td>
+                                    <td>
+                                        {
+                                            this.state.shipping_province
+                                        }
+                                    </td>
+                                    <td>
+                                        {
+                                            this.state.shipping_wards
                                         }
                                     </td>
                                     <td>
                                         {
                                             this.state.order[
                                                 item
-                                            ].province
-                                        }
-                                    </td>
-                                    <td>
-                                        {
-                                            this.state.order[
-                                                item
-                                            ].wards
+                                            ].address
                                         }
                                     </td>
                                     <td>
@@ -156,7 +172,6 @@ export default class OrderView extends Component {
                             <th scope="col">ID sách</th>
                             <th scope="col">Tên sách</th>
                             <th scope="col">Tổng giá sách</th>
-                            <th scope="col">Số lượng hàng trong kho</th>
                             <th scope="col">Số lượng mua</th>
                         </tr>
                     </thead>
@@ -172,7 +187,6 @@ export default class OrderView extends Component {
                                         </td>
                                         <td>{item.product_name}</td>
                                         <td>{item.product_price}</td>
-                                        <td>{item.product_quantity_available} quyển sách</td>
                                         <td>
                                             <input type="hidden" value={item.product_sales_quantity} name="product_sales_quantity" />
                                             {item.product_sales_quantity} quyển sách
@@ -189,7 +203,7 @@ export default class OrderView extends Component {
                     <Row>
                         <div className="col-4">
                             <Link to={`${PUBLIC_URL}order`} className="btn btn-primary mb-5">
-                                Danh sách đơn hàng
+                                Xem danh sách đơn hàng
                         </Link>
                         </div>
                         <div className="col-8">
@@ -218,6 +232,3 @@ export default class OrderView extends Component {
     }
 
 }
-
-
-

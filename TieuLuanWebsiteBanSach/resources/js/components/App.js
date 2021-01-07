@@ -21,14 +21,13 @@ import AuthenticatedRoutes from './AuthenticatedRoutes';
 import LoginCheckout from './pages/auth/LoginCustomer';
 import RegisterCheckout from './pages/auth/RegisterCustomer';
 import { checkCusIfAuthenticated } from '../services/CustomerAuthService';
-import { checkCartItem } from '../services/CartService';
 import CheckoutItem from './pages/checkout/CheckoutItem';
 import CheckoutInformation from './pages/checkout/CheckoutInformation';
 import ShowCheckout from './pages/checkout/ShowCheckout';
 import NoCheckoutItems from './pages/checkout/NoCheckoutItems';
 import Detail from './pages/books/Detail';
 import News from './pages/news/News';
-import {createStore} from 'redux'
+import { createStore } from 'redux'
 import { Provider } from 'react-redux'
 import myReducer from './reducers/index'
 import { reduce } from 'lodash';
@@ -58,25 +57,25 @@ class App extends Component {
         isLoggedIn: false,
         isStaffLoggedIn: false,
         isCusLoggedIn: false,
-        cart:[],
+        cart: [],
     };
-    buyItem=(value)=>{
-        this.state.cart=value;
+    buyItem = (value) => {
+        this.state.cart = value;
     }
     componentDidMount() {
-        console.log("cart",this.state.cart);
+        console.log("cart", this.state.cart);
         // Accordion 
         var acc = document.getElementsByClassName("accordion");
         var i;
         for (i = 0; i < acc.length; i++) {
             acc[i].addEventListener("click", function () {
-            this.classList.toggle("active");
-            var panel = this.nextElementSibling;
-            if (panel.style.maxHeight) {
-                panel.style.maxHeight = null;
-            } else {
-                panel.style.maxHeight = panel.scrollHeight + "px";
-            }
+                this.classList.toggle("active");
+                var panel = this.nextElementSibling;
+                if (panel.style.maxHeight) {
+                    panel.style.maxHeight = null;
+                } else {
+                    panel.style.maxHeight = panel.scrollHeight + "px";
+                }
             });
         }
 
@@ -86,21 +85,16 @@ class App extends Component {
                 isLoggedIn: true,
             });
         }
-        if (checkIfStaffAuthenticated()) {
+        else if (checkIfStaffAuthenticated()) {
             this.setState({
                 staff: checkIfStaffAuthenticated(),
                 isStaffLoggedIn: true,
             });
         }
-        if (checkCusIfAuthenticated()) {
+        else if (checkCusIfAuthenticated()) {
             this.setState({
                 customer: checkCusIfAuthenticated(),
                 isCusLoggedIn: true,
-            });
-        }
-        if (checkCartItem()) {
-            this.setState({
-                cart: checkCartItem(),
             });
         }
     }
@@ -298,8 +292,8 @@ export default App;
 
 if (document.getElementById('app')) {
     ReactDOM.render(
-    <Provider store={store}>
-        <App />
-    </Provider>
-    , document.getElementById('app'));
+        <Provider store={store}>
+            <App />
+        </Provider>
+        , document.getElementById('app'));
 }

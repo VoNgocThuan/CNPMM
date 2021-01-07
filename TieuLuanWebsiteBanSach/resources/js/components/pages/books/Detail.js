@@ -12,7 +12,7 @@ class Detail extends Component {
         this.state = {
             book: {},
             imageBook: '',
-            qty: '',
+            qty: 1,
             img: '',
             id: '',
             totalCart: '',
@@ -47,7 +47,6 @@ class Detail extends Component {
         this.changeActive(this.state.book.image1)
     };
     componentDidMount() {
-        let bookID = this.props.match.params.id;
         this.getBookDetails();
         this.changeActive(this.state.book.image1);
         this.getCartDetails();
@@ -74,23 +73,26 @@ class Detail extends Component {
 
     handleSubmit(e) {
         e.preventDefault();
-        Axios.post('http://127.0.0.1:8000/add', {
-            qty: this.state.qty,
-            id: this.state.id
-        })
-            .then(res => {
-                console.log(res.data);
-                this.setState({
-                    cartlist: res.data,
+        if (this.state.book.quantity >= this.state.qty) {
+            Axios.post('http://127.0.0.1:8000/add', {
+                qty: this.state.qty,
+                id: this.state.id
+            })
+                .then(res => {
+                    this.setState({
+                        cartlist: res.data,
+                    });
+                    this.getTotalQuantity();
+                    this.getCartDetails();
+                    this.getTotalCart();
+                    this.props.temp(this.state.cartlist);
                 });
-                this.getTotalQuantity();
-                this.getCartDetails();
-                this.getTotalCart();
-                this.props.temp(this.state.cartlist);
-                localStorage.setItem("CartData", JSON.stringify(res));
-            });
-        this.props.onAddProduct(this.state.totalQuantity, this.state.cartlist, this.state.totalCart);
-    }
+            this.props.onAddProduct(this.state.totalQuantity, this.state.cartlist, this.state.totalCart);
+        }
+        else {
+            alert("Số lượng tối đa được phép mua: " + this.state.book.quantity);
+        }
+    };
 
     getTotalCart = () => {
         Axios.get('http://127.0.0.1:8000/totalCart').then((res) => {
@@ -99,7 +101,7 @@ class Detail extends Component {
             });
             this.props.onAddProduct(this.state.totalQuantity, this.state.cartlist, this.state.totalCart);
         });
-        
+
     }
     getTotalQuantity = () => {
         Axios.get('http://127.0.0.1:8000/totalQuantity').then((res) => {
@@ -124,6 +126,12 @@ class Detail extends Component {
         }
     };
 
+    handlePlusMinus(type) {
+        this.setState(prevState => {
+            return { qty: type == 'add' ? prevState.qty + 1 : prevState.qty - 1 }
+        });
+    }
+
     render() {
         return (
             <>
@@ -142,7 +150,6 @@ class Detail extends Component {
                                             zoomPosition: 'right: 10px'
                                         }} />
                                     </div>
-                                    {/* <p className={"margin-div-five"}>Scroll over the image to zoom</p> */}
                                     <a onClick={() => { this.changeActive(this.state.book.image1) }} className={this.state.imageBook === this.state.book.image1 ? 'imgDetailMini active' : 'imgDetailMini'}>
                                         <img src={this.state.book.image1}></img>
                                     </a>
@@ -159,6 +166,7 @@ class Detail extends Component {
                                         <h4 className="price"><span>{this.state.book.originalPrice}đ</span> - {this.state.book.price}đ</h4>
                                         <h5 className="save">Tiết kiệm được: {(this.state.book.originalPrice - this.state.book.price)}đ</h5>
                                         <p>
+                                            <b>Giới thiệu sách: </b> <br></br>
                                             {this.state.book.description}
                                         </p>
                                         <div className={"product-info-star-rating"}>
@@ -176,24 +184,73 @@ class Detail extends Component {
                                             }
                                         </div>
                                         <br></br>
-                                        <FormGroup controlId="formQuantitySelect" className={"quantity-select"}>
-                                            <FormLabel>Số lượng sách</FormLabel>
-                                            <FormControl
-                                                type="number"
-                                                name="quantity"
-                                                value={this.state.qty}
-                                                onChange={(e) => this.qty(this.props.match.params.id, e)}
-                                                onBlur={this.onQuantityBlur}
-                                            />
-                                        </FormGroup>
-                                        <div>
+
+                                        {this.state.book.quantity > 0 && (
+                                            <>
+                                                <div controlId="formQuantitySelect" className="boxQty input-group" style={{ width: "250px" }}>
+                                                    <FormLabel><strong>Số lượng sách</strong></FormLabel>
+                                                    <button
+                                                        className="minus-item btn btn-info input-group-addon ml-3"
+                                                        onClick={this.handlePlusMinus.bind(this, 'sub')}
+                                                        value='Dec'
+                                                    >
+                                                        -
+                                                    </button>
+                                                    <input
+                                                        type="number"
+                                                        name="quantity"
+                                                        className="item-count form-control text-center"
+                                                        value={this.state.qty}
+                                                        onChange={(e) => this.qty(this.props.match.params.id, e)}
+                                                        onBlur={this.onQuantityBlur}
+                                                    />
+                                                    <button
+                                                        className="plus-item btn btn-info input-group-addon"
+                                                        onClick={this.handlePlusMinus.bind(this, 'add')}
+                                                        value='Inc'
+                                                    >
+                                                        +
+                                                    </button>
+                                                </div>
+                                            </>
+                                        )}
+
+                                        {this.state.book.quantity === 0 && (
+                                            <>
+                                                <div className="detail mt-2">
+                                                    <h4 className="price">
+                                                        HẾT HÀNG
+                                                    </h4>
+                                                </div>
+                                            </>
+                                        )}
+
+                                        <div className="mt-4">
                                             <span>
-                                                <Button
-                                                    type="submit"
-                                                    bsstyle={"primary"}
-                                                    className={"btn add-to-cart-product"}
-                                                >Thêm vào giỏ
-                                                </Button>
+                                                {this.state.book.quantity > 0 && (
+                                                    <>
+                                                        <Button
+                                                            type="submit"
+                                                            bsstyle={"primary"}
+                                                            className={"btn btn-info add-to-cart-product"}
+                                                            value={this.state.qty}
+                                                            onClick={(e) => this.qty(this.props.match.params.id, e)}
+                                                        >
+                                                            Thêm vào giỏ
+                                                        </Button>
+                                                    </>
+                                                )}
+                                                {this.state.book.quantity === 0 && (
+                                                    <>
+                                                        <Button
+                                                            bsstyle={"primary"}
+                                                            className={"btn btn-info add-to-cart-product"}
+                                                            disabled
+                                                        >
+                                                            Thêm vào giỏ
+                                                        </Button>
+                                                    </>
+                                                )}  
                                             </span>
                                         </div>
                                     </div>
@@ -206,16 +263,16 @@ class Detail extends Component {
         );
     }
 }
-const mapStateToProps = state =>{
+const mapStateToProps = state => {
     return {
 
     }
 }
-const mapDispatchToProps = (dispatch, props) =>{
+const mapDispatchToProps = (dispatch, props) => {
     return {
-        onAddProduct : (total,cartlist,totalCart) =>{
-            dispatch(actions.addProduct(total,cartlist,totalCart));
+        onAddProduct: (total, cartlist, totalCart) => {
+            dispatch(actions.addProduct(total, cartlist, totalCart));
         }
     }
 }
-export default connect(mapStateToProps,mapDispatchToProps)(Detail);
+export default connect(mapStateToProps, mapDispatchToProps)(Detail);

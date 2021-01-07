@@ -190,7 +190,7 @@ class ProductPurchase extends Component {
                                 <div className="purchase-card-buttons__show-button-wrapper">
                                     <button
                                         className="btn btn-danger shopee-button-outline--fill"
-                                        onClick={() => this.qty(this.props.key)}
+                                        onClick={() => this.qty(this.props.proPurchaseID)}
                                     >
                                         Hủy đơn hàng
                                     </button>

@@ -187,7 +187,7 @@ class ShowCheckout extends React.Component {
                         city: this.state.city,
                         province: this.state.province,
                         wards: this.state.wards,
-                        address: this.state.address,
+                        address: this.state.cus_address,
                         phone: this.state.phone,
                         feeship: this.state.cus_feeship,
                         total: this.state.tongTien,
@@ -264,7 +264,7 @@ class ShowCheckout extends React.Component {
                         total: this.state.tongTien
                     }
                     Axios.post('http://127.0.0.1:8000/send-mail', emailData);
-                    //window.location.href = 'http://127.0.0.1:8000/shopbansach/pagesuccessful';
+                    window.location.href = 'http://127.0.0.1:8000/shopbansach/pagesuccessful';
                     this.deleteAllCart();
                 })
                 .catch((error) => {

@@ -119,14 +119,11 @@ class OrdersController extends Controller
             'wards' => 'required',
             'address' => 'required',
             'phone' => 'required',
-            'note' => 'required',
             'feeship' => 'required',
             'totalPrice' => 'required',
             'paymentMethod' => 'required',
             'status' => 'required',
-            'prevTotalPrice' => 'required',
-            'coupon_code' => 'required',
-            'coupon_number' => 'required',
+            'prevTotalPrice' => 'required'
         ], [
             'customer_id.required' => 'Please give customer id',
             'name.required' => 'Please give name for shipping',
@@ -136,14 +133,11 @@ class OrdersController extends Controller
             'wards.required' => 'Please give wards for shipping',
             'address.required' => 'Please give address for shipping',
             'phone.required' => 'Please give phone for shipping',
-            'note.required' => 'Please give note for shipping',
             'feeship.required' => 'Please give feeship for shipping',
             'totalPrice.required' => 'Please give totalPrice shipping',
             'paymentMethod.required' => 'Please give paymentMethod for shipping',
             'status.required' => 'Please give status for shipping',
-            'prevTotalPrice' => 'Please give prevTotalPrice for shipping',
-            'coupon_code' => 'Please give coupon_code for shipping',
-            'coupon_number' => 'Please give coupon_number for shipping'
+            'prevTotalPrice' => 'Please give prevTotalPrice for shipping'
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -176,9 +170,7 @@ class OrdersController extends Controller
             'totalPrice' => 'required',
             'paymentMethod' => 'required',
             'status' => 'required',
-            'prevTotalPrice' => 'required',
-            'coupon_code' => 'required',
-            'coupon_number' => 'required',
+            'prevTotalPrice' => 'required'
         ], [
             'customer_id.required' => 'Please give customer id',
             'name.required' => 'Please give name for shipping',
@@ -192,9 +184,7 @@ class OrdersController extends Controller
             'totalPrice.required' => 'Please give totalPrice shipping',
             'paymentMethod.required' => 'Please give paymentMethod for shipping',
             'status.required' => 'Please give status for shipping',
-            'prevTotalPrice' => 'Please give prevTotalPrice for shipping',
-            'coupon_code' => 'Please give coupon_code for shipping',
-            'coupon_number' => 'Please give coupon_number for shipping'
+            'prevTotalPrice' => 'Please give prevTotalPrice for shipping'
         ]);
         if ($validator->fails()) {
             return response()->json([

@@ -134,7 +134,7 @@ class AccountInfo extends Component {
     render() {
         return (
             <form onSubmit={this.handleUpdateCusInfo}>
-            <div className="h25IfI" role="main">
+            <div className="h25IfI container mt-4" role="main">
                 <div className="my-account-section">
                     <div className="my-account-section__header">
                         <div className="my-account-section__header-left">
